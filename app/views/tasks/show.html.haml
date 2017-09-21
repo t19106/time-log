@@ -1,0 +1,16 @@
+%h1 Tasks#show
+
+= @task.date
+%br
+- @subtask.each do |sub|
+  = sub.title
+  = sub.time
+  %br
+= form_for Subtask.new, url: subtasks_path do |f|
+  = f.text_field :time
+  = f.text_field :title
+  = f.hidden_field :year, value: @task.date.year
+  = f.hidden_field :month, value: @task.date.month
+  = f.hidden_field :day, value: @task.date.day
+  = f.submit
+= link_to '一覧へ戻る', "/tasks/#{@task.date.year}/#{@task.date.month}"

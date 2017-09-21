@@ -10,4 +10,10 @@ class TasksController < ApplicationController
       _tasks[day] ? @tasks << _tasks[day].first : @tasks << Task.new(user: current_user, date: criterion.change(day: day))
     end
   end
+
+  def show
+    _date = Time.gm(params[:year], params[:month], params[:day])
+    @task = Task.find_by(user: current_user, date: _date) || Task.new(user: current_user, date: _date)
+    @subtask = Subtask.where(task: @task)
+  end
 end
