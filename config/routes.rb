@@ -5,7 +5,7 @@ Rails.application.routes.draw do
   resources :tasks, only: %i(create)
   namespace :tasks do
     get ':year/:month', to: 'months#index', as: 'months', constraints: { year: /[0-9]{4}/, month: /[0-9]{1,2}/ }
-    get ':year/:month/:day', to: 'days#index', as: 'days'
+    get ':year/:month/:day', to: 'days#index', as: 'days', constraints: { year: /[0-9]{4}/, month: /[0-9]{1,2}/, day: /[0-9]{1,2}/ }
   end
   resources :users, only: %i(new create)
 end

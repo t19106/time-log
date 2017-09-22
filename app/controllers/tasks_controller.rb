@@ -12,7 +12,7 @@ class TasksController < ApplicationController
       @subtask = Subtask.where(task: task)
       redirect_to tasks_days_path year: task.date.year, month: task.date.month, day: task.date.day
     else
-      redirect_to controller: :tasks, action: :month, year: task.date.year, month: task.date.month
+      redirect_to tasks_months_path year: task.date.year, month: task.date.month
     end
   end
 

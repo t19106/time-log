@@ -11,6 +11,6 @@ class ApplicationController < ActionController::Base
   end
 
   def is_login?
-    redirect_to controller: :tasks, action: :index, year: Date.today.year, month: Date.today.month if current_user.login?
+    redirect_to tasks_months_path year: Date.today.year, month: Date.today.month if current_user.login?
   end
 end
