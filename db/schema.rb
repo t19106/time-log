@@ -14,6 +14,8 @@ ActiveRecord::Schema.define(version: 20170919013028) do
 
   create_table "tasks", force: :cascade do |t|
     t.datetime "datetime"
+    t.time "start_time"
+    t.time "end_time"
     t.string "title"
     t.integer "user_id"
     t.datetime "created_at", null: false
