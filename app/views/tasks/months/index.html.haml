@@ -4,8 +4,11 @@
 month:
 = params[:month]
 %br
-- @tasks.each do |task|
-  - day = task.date.day
-  = link_to day, tasks_days_path(year: task.date.year, month: task.date.month, day: task.date.day)
+- @tasks.each do |date, tasks|
+  - tasks.each do |task|
+    - unless task.blank?
+      = task.title
+      %br
+  = link_to date, tasks_days_path(year: params[:year], month: params[:month], day: date)
   %br
 = link_to 'ログアウトする', logout_path
