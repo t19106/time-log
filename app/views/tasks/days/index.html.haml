@@ -6,7 +6,7 @@
   = sub.title
   = sub.time
   %br
-= form_for Subtask.new, url: subtasks_path do |f|
+= form_for Subtask.new, url: tasks_path do |f|
   = f.text_field :time
   = f.text_field :title
   = f.hidden_field :year, value: @task.date.year

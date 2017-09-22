@@ -7,9 +7,9 @@ class SessionsController < ApplicationController
     user = User.find_by(name: user_params[:name])
     if user && user.authenticate(user_params[:password])
       session[:user_id] = user.id
-      redirect_to controller: :tasks, action: :index, year: Date.today.year, month: Date.today.month
+      redirect_to tasks_months_path year: Date.today.year, month: Date.today.month
     else
-      render 'new'
+      render :new
     end
   end
 
