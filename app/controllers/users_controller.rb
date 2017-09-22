@@ -7,7 +7,7 @@ class UsersController < ApplicationController
     user = User.new(user_params)
     if user.save!
       session[:user_id] = user.id
-      redirect_to controller: :tasks, action: :index, year: Date.today.year, month: Date.today.month
+      redirect_to tasks_months_path year: Date.today.year, month: Date.today.month
     else
       render :new
     end

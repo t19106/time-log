@@ -1,19 +1,24 @@
 class TasksController < ApplicationController
   before_action :verify_user
 
-  def index
-    criterion = Time.gm(params[:year], params[:month])
-    last_day = criterion.end_of_month.day
-    _tasks = Task.where(user: current_user, date: criterion.beginning_of_month..criterion.end_of_month).group_by { |t| t.date.day }
-    @tasks = []
-    (1..last_day).each do |day|
-      _tasks[day] ? @tasks << _tasks[day].first : @tasks << Task.new(user: current_user, date: criterion.change(day: day))
+  def create
+    _date = Time.gm(params[:subtask][:year], params[:subtask][:month], params[:subtask][:day])
+    task = Task.find_by(user: current_user, date: _date) || Task.create(user: current_user, date: _date)
+    subtask = Subtask.new(subtask_params)
+    subtask.task = task
+
+    if subtask.save!
+      @task = task
+      @subtask = Subtask.where(task: task)
+      redirect_to tasks_days_path year: task.date.year, month: task.date.month, day: task.date.day
+    else
+      redirect_to tasks_months_path year: task.date.year, month: task.date.month
     end
   end
 
-  def show
-    _date = Time.gm(params[:year], params[:month], params[:day])
-    @task = Task.find_by(user: current_user, date: _date) || Task.new(user: current_user, date: _date)
-    @subtask = Subtask.where(task: @task)
-  end
+  private
+
+    def subtask_params
+      params.require(:subtask).permit(:time, :title)
+    end
 end

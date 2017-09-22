@@ -6,6 +6,6 @@ month:
 %br
 - @tasks.each do |task|
   - day = task.date.day
-  = link_to day, action: 'show', year: params[:year], month: params[:month], day: task.date.day
+  = link_to day, tasks_days_path(year: task.date.year, month: task.date.month, day: task.date.day)
   %br
 = link_to 'ログアウトする', logout_path
