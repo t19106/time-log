@@ -5,16 +5,17 @@ month:
 = params[:month]
 %br
 - @tasks.each do |date, tasks|
+  - date_in_time = Time.new(params[:year], params[:month], date)
   = link_to date, tasks_days_path(year: params[:year], month: params[:month], day: date)
   %br
   - unless tasks.empty?
     合計時間:
-    = total_time_from_tasks(tasks)
+    = total_time_from_tasks(tasks, date_in_time)
     %br
   - tasks.each do |task|
     - unless task.blank?
       = task.title
-      = time_format_from_task(task)
+      = time_format_from_task(task, date_in_time)
       %br
   %br
 = link_to 'ログアウトする', logout_path

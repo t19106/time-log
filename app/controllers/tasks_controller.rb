@@ -4,8 +4,6 @@ class TasksController < ApplicationController
   def create
     _date = Time.new(params[:task][:year], params[:task][:month], params[:task][:day])
     task = Task.new(task_params)
-    task.start_at = task.start_at.change(year: params[:task][:year], month: params[:task][:month], day: params[:task][:day])
-    task.end_at = task.end_at.change(year: params[:task][:year], month: params[:task][:month], day: params[:task][:day])
     task.user = current_user
 
     if task.save!
