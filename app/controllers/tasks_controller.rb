@@ -2,7 +2,7 @@ class TasksController < ApplicationController
   before_action :verify_user
 
   def create
-    _date = Time.gm(params[:task][:year], params[:task][:month], params[:task][:day])
+    _date = Time.new(params[:task][:year], params[:task][:month], params[:task][:day])
     task = Task.new(task_params)
     task.start_at = task.start_at.change(year: params[:task][:year], month: params[:task][:month], day: params[:task][:day])
     task.end_at = task.end_at.change(year: params[:task][:year], month: params[:task][:month], day: params[:task][:day])

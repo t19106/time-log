@@ -1,14 +1,16 @@
-%h1 Tasks#show
-
-= @date
+= show_date(@date)
+%br
+合計時間:
+= total_time_from_tasks(@tasks) || 'まだタスクが登録されていません。'
 %br
 - @tasks.each do |task|
   = task.title
-  = (task.end_at - task.start_at) / 60
+  = time_format_from_task(task)
+  = show_time_from_task(task)
   %br
 = form_for @task, url: tasks_path do |f|
-  = time_select 'task', 'start_at', { minute_step: 10, ampm: true }
-  = time_select 'task', 'end_at', { minute_step: 10, ampm: true }
+  = time_select 'task', 'start_at', { minute_step: 10, ampm: true, default: set_time_select_to_now(@date) }
+  = time_select 'task', 'end_at', { minute_step: 10, ampm: true, default: set_time_select_to_now(@date) }
   = f.text_field :title
   = f.hidden_field :year, value: params[:year]
   = f.hidden_field :month, value: params[:month]
