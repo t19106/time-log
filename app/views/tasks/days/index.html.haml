@@ -6,7 +6,7 @@
 - @tasks.each do |task|
   = task.title
   = time_format_from_task(task, @date)
-  = show_time_from_task(task, @date)
+  = time_range_format(task, @date)
   %br
 = form_for @task, url: tasks_path do |f|
   = datetime_select 'task', 'start_at', { minute_step: 10, ampm: true, default: set_time_select_to_now(@date) }
