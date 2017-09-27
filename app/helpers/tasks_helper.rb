@@ -6,12 +6,10 @@ module TasksHelper
   end
 
   def time_range_format(task, date)
-    task = task.adjust_overnight_range(date) if task.is_overnight?
     "#{task.start_at.strftime('%H:%M')} ~ #{task.end_at.strftime('%H:%M')}"
   end
 
   def time_format_from_task(task, date)
-    task = task.adjust_overnight_range(date) if task.is_overnight?
     time_format(task.to_hours, task.to_minutes)
   end
 
@@ -39,10 +37,7 @@ module TasksHelper
   end
 
   def take_hours_and_minutes(tasks, date)
-    _tasks = tasks.map do |task|
-      task = task.adjust_overnight_range(date) if task.is_overnight?
-      { hours: task.to_hours, minutes: task.to_minutes }
-    end
+    _tasks = tasks.map { |task| { hours: task.to_hours, minutes: task.to_minutes } }
     hours = _tasks.inject(0) { |total, task| total + task[:hours] }
     minutes = _tasks.inject(0) { |total, task| total + task[:minutes] }
     recalculate(hours, minutes)
