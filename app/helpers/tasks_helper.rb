@@ -1,5 +1,3 @@
-# このモジュールの内部では、Task情報をActiveRecord Relationとして渡された時は、
-# tasksをmap(&:attributes)によってハッシュ化してからデータを扱う
 module TasksHelper
   def show_date(time)
     time.strftime('%Y年%m月%d日')
