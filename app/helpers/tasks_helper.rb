@@ -1,14 +1,6 @@
 module TasksHelper
-  def show_date(time)
-    time.strftime('%Y年%m月%d日')
-  end
-
-  def time_range_format(task, date)
-    "#{task.start_at.strftime('%H:%M')} ~ #{task.end_at.strftime('%H:%M')}"
-  end
-
-  def time_format_from_task(task, date)
-    time_format(task.to_hours, task.to_minutes)
+  def show_time_range(task)
+    "#{l task.start_at, format: :time} ~ #{l task.end_at, format: :time}"
   end
 
   def set_time_select_to_now(date)
@@ -20,17 +12,24 @@ module TasksHelper
     end
   end
 
+  def time_format_from_task(task)
+    if task.to_hours > 0
+      task.to_minutes == 0 ? "#{task.to_hours}#{t :hours}" : "#{task.to_hours}#{t :hours}#{task.to_minutes}#{t :minutes}"
+    else
+      "#{task.to_minutes}#{t :minutes}"
+    end
+  end
+
   def total_time_from_tasks(tasks, date)
-    return false if tasks.empty?
     times = take_hours_and_minutes(tasks, date)
     time_format(times[:hours], times[:minutes])
   end
 
   def time_format(hours, minutes)
     if hours > 0
-      minutes == 0 ? "#{hours}時間" : "#{hours}時間#{minutes}分"
+      minutes == 0 ? "#{hours}#{t :hours}" : "#{hours}#{t :hours}#{minutes}#{t :minutes}"
     else
-      "#{minutes}分"
+      "#{minutes}#{t :minutes}"
     end
   end
 

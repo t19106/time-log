@@ -15,11 +15,11 @@ class Task < ApplicationRecord
 
   def adjust_overnight_range(date)
     return self unless is_overnight?
-    _task = self.dup
+    _task = self.clone
     if start_at < date.beginning_of_day
-      _task.start_at = _task.start_at.change(day: date.day, hour: 0, min: 0)
+      _task.start_at = start_at.change(day: date.day, hour: 0, min: 0)
     elsif end_at > date.end_of_day
-      _task.end_at = _task.end_at.change(day: date.tomorrow.day, hour: 0, min: 0)
+      _task.end_at = end_at.change(day: date.tomorrow.day, hour: 0, min: 0)
     end
     _task
   end

@@ -1,12 +1,12 @@
-= show_date(@date)
+= l @date, format: :date
 %br
 合計時間:
 = total_time_from_tasks(@tasks, @date) || 'まだタスクが登録されていません。'
 %br
 - @tasks.each do |task|
   = task.title
-  = time_format_from_task(task, @date)
-  = time_range_format(task, @date)
+  = time_format_from_task(task)
+  = show_time_range(task)
   %br
 = form_for @task, url: tasks_path do |f|
   = datetime_select 'task', 'start_at', { minute_step: 10, ampm: true, default: set_time_select_to_now(@date) }
