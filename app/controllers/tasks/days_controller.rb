@@ -3,7 +3,7 @@ class Tasks::DaysController < ApplicationController
 
   def index
     @date = Time.new(params[:year], params[:month], params[:day])
-    @tasks = Task.where(user: current_user, start_at: @date.beginning_of_day..@date.end_of_day)
+    @tasks = Task.where(user: current_user, start_at: @date.beginning_of_day..@date.end_of_day).or(Task.where(user: current_user, end_at: @date.beginning_of_day..@date.end_of_day)).map { |task| task.adjust_overnight_range(@date) }
     @task = Task.new
   end
 end

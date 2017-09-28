@@ -1,20 +1,18 @@
-%h1 Tasks#index
-%p Find me in app/views/tasks/index.html.haml
-
-month:
-= params[:month]
+= l @date, format: :month
 %br
-- @tasks.each do |date, tasks|
+- (@date.beginning_of_month.day..@date.end_of_month.day).each do |date|
+  - date_in_time = Time.new(params[:year], params[:month], date)
   = link_to date, tasks_days_path(year: params[:year], month: params[:month], day: date)
   %br
-  - unless tasks.empty?
+  - if @tasks[date]
     合計時間:
-    = total_time_from_tasks(tasks)
+    = total_time_from_tasks(@tasks[date], date_in_time)
     %br
-  - tasks.each do |task|
-    - unless task.blank?
-      = task.title
-      = time_format_from_task(task)
-      %br
+    - @tasks[date].each do |task|
+      - unless task.blank?
+        = task.title
+        = time_format_from_task(task)
+        = show_time_range(task)
+        %br
   %br
 = link_to 'ログアウトする', logout_path
