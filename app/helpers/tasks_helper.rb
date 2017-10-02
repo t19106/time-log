@@ -1,6 +1,6 @@
 module TasksHelper
   def show_time_range(task)
-    "#{l task.start_at, format: :time} ~ #{l task.end_at, format: :time}"
+    "#{l task.starts_at, format: :time} ~ #{l task.ends_at, format: :time}"
   end
 
   def set_time_select_to_now(date)

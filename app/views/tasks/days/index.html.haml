@@ -9,8 +9,8 @@
   = show_time_range(task)
   %br
 = form_for @task, url: tasks_path do |f|
-  = datetime_select 'task', 'start_at', { minute_step: 10, ampm: true, default: set_time_select_to_now(@date) }
-  = datetime_select 'task', 'end_at', { minute_step: 10, ampm: true, default: set_time_select_to_now(@date) }
+  = datetime_select 'task', 'starts_at', { minute_step: 10, ampm: true, default: set_time_select_to_now(@date) }
+  = datetime_select 'task', 'ends_at', { minute_step: 10, ampm: true, default: set_time_select_to_now(@date) }
   = f.text_field :title
   = f.hidden_field :year, value: params[:year]
   = f.hidden_field :month, value: params[:month]
