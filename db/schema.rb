@@ -12,11 +12,14 @@
 
 ActiveRecord::Schema.define(version: 20170919013028) do
 
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+
   create_table "tasks", force: :cascade do |t|
-    t.datetime "start_at"
-    t.datetime "end_at"
+    t.datetime "starts_at"
+    t.datetime "ends_at"
     t.string "title"
-    t.integer "user_id"
+    t.bigint "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_tasks_on_user_id"
@@ -29,4 +32,5 @@ ActiveRecord::Schema.define(version: 20170919013028) do
     t.datetime "updated_at", null: false
   end
 
+  add_foreign_key "tasks", "users"
 end
