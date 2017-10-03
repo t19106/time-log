@@ -1,7 +1,7 @@
 = l @date, format: :month
 %br
 - (@date.beginning_of_month.day..@date.end_of_month.day).each do |date|
-  - date_in_time = Time.new(params[:year], params[:month], date)
+  - date_in_time = Time.zone.local(params[:year], params[:month], date)
   = link_to (l date_in_time, format: :day), tasks_days_path(year: params[:year], month: params[:month], day: date)
   %br
   - if @tasks[date]

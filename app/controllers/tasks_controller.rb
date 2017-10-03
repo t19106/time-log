@@ -2,7 +2,7 @@ class TasksController < ApplicationController
   before_action :verify_user
 
   def create
-    _date = Time.new(params[:task][:year], params[:task][:month], params[:task][:day])
+    _date = Time.zone.local(params[:task][:year], params[:task][:month], params[:task][:day])
     task = Task.new(task_params)
     task.user = current_user
 
