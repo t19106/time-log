@@ -14,6 +14,13 @@ class TasksController < ApplicationController
     end
   end
 
+  def destroy
+    task = Task.find(params[:id])
+    date = task.starts_at
+    task.destroy
+    redirect_to tasks_days_path year: date.year, month: date.month, day: date.day
+  end
+
   private
 
     def task_params
