@@ -2,7 +2,7 @@ class TasksController < ApplicationController
   before_action :verify_user
 
   def create
-    _date = Time.new(params[:task][:year], params[:task][:month], params[:task][:day])
+    _date = Time.zone.local(params[:task][:year], params[:task][:month], params[:task][:day])
     task = Task.new(task_params)
     task.user = current_user
 
@@ -12,6 +12,13 @@ class TasksController < ApplicationController
     else
       redirect_to tasks_months_path year: task.starts_at.year, month: task.starts_at.month
     end
+  end
+
+  def destroy
+    task = Task.find(params[:id])
+    date = task.starts_at
+    task.destroy
+    redirect_to tasks_days_path year: date.year, month: date.month, day: date.day
   end
 
   private

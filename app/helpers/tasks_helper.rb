@@ -4,11 +4,11 @@ module TasksHelper
   end
 
   def set_time_select_to_now(date)
-    _min = Time.now.min.floor.round(-1)
+    _min = Time.zone.now.min.floor.round(-1)
     if _min == 60
-      Time.new(date.year, date.month, date.day, (Time.now + 3600).hour, 0)
+      Time.zone.local(date.year, date.month, date.day, (Time.zone.now + 3600).hour, 0)
     else
-      Time.new(date.year, date.month, date.day, Time.now.hour, _min)
+      Time.zone.local(date.year, date.month, date.day, Time.zone.now.hour, _min)
     end
   end
 

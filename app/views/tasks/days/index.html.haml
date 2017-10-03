@@ -7,10 +7,11 @@
   = task.title
   = time_format_from_task(task)
   = show_time_range(task)
+  = link_to '[X]', task_path(id: task.id), method: :delete
   %br
 = form_for @task, url: tasks_path do |f|
-  = datetime_select 'task', 'starts_at', { minute_step: 10, ampm: true, default: set_time_select_to_now(@date) }
-  = datetime_select 'task', 'ends_at', { minute_step: 10, ampm: true, default: set_time_select_to_now(@date) }
+  = datetime_select 'task', 'starts_at', { discard_year: true, minute_step: 10, ampm: true, default: set_time_select_to_now(@date) }
+  = datetime_select 'task', 'ends_at', { discard_year: true, minute_step: 10, ampm: true, default: set_time_select_to_now(@date) }
   = f.text_field :title
   = f.hidden_field :year, value: params[:year]
   = f.hidden_field :month, value: params[:month]

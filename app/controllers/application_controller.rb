@@ -13,4 +13,12 @@ class ApplicationController < ActionController::Base
   def is_login?
     redirect_to tasks_months_path year: Date.today.year, month: Date.today.month if current_user.login?
   end
+
+  def validate_uri
+    begin
+     @date = Time.zone.local(params[:year], params[:month], params[:day])
+    rescue ArgumentError
+      redirect_to tasks_months_path year: Time.zone.now.year, month: Time.zone.now.month
+    end
+  end
 end

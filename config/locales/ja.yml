@@ -1,6 +1,8 @@
 ja:
   hours: '時間'
   minutes: '分'
+  year: '年'
+  month: '月'
 
   time:
     formats:
