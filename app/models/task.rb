@@ -1,6 +1,24 @@
 class Task < ApplicationRecord
   belongs_to :user
 
+  validates :memo, presence: true
+  validates :starts_at, presence: true
+  validates :ends_at, presence: true
+  validate :ended_after_started?
+  validate :less_than_a_day?
+
+  def ended_after_started?
+    if starts_at >= ends_at
+      errors.add(:ends_at, ': 終了時間は開始時間より前に設定できません。')
+    end
+  end
+
+  def less_than_a_day?
+    unless to_hours < 24
+      errors.add(:ends_at, ': ２４時間を超えるタスクは設定できません。')
+    end
+  end
+
   def to_hours
     ((ends_at - starts_at) / 60 / 60).to_i
   end

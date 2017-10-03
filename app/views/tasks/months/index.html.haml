@@ -10,7 +10,7 @@
     %br
     - @tasks[date].each do |task|
       - unless task.blank?
-        = task.title
+        = task.memo
         = time_format_from_task(task)
         = show_time_range(task)
         %br

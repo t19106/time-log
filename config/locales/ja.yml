@@ -19,3 +19,6 @@ ja:
       - :year
       - :month
       - :day
+
+  errors:
+    messages:
