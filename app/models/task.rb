@@ -3,20 +3,28 @@ class Task < ApplicationRecord
 
   validates :starts_at, presence: true
   validates :ends_at, presence: true
-  validate :ended_after_started?
-  validate :less_than_a_day?
+  validate :ended_after_started
+  validate :started_and_ended_are_different
+  validate :less_than_a_day
 
-  def ended_after_started?
+  def ended_after_started
     return if starts_at.nil? || ends_at.nil?
-    if starts_at >= ends_at
-      errors.add(:ends_at, ': 終了時間は開始時間より前に設定できません。')
+    if starts_at > ends_at
+      errors.add(:ends_at, '終了時間は開始時間より前に設定できません。')
     end
   end
 
-  def less_than_a_day?
+  def started_and_ended_are_different
+    return if starts_at.nil? || ends_at.nil?
+    if starts_at == ends_at
+      errors.add(:ends_at, '開始時間と終了時間が同じです。0分以上の作業時間を登録しましょう。')
+    end
+  end
+
+  def less_than_a_day
     return if starts_at.nil? || ends_at.nil?
     unless to_hours < 24
-      errors.add(:ends_at, ': ２４時間を超えるタスクは設定できません。')
+      errors.add(:ends_at, '24時間を超えるタスクは設定できません。')
     end
   end
 

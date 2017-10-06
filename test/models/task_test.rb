@@ -24,11 +24,12 @@ class TaskTest < ActiveSupport::TestCase
     task = Task.new(user: @user, starts_at: @time, ends_at: @time)
     refute task.save
 
-    # 作業時間が24時間ちょうどである
     # 作業時間が24時間を超える
-    task = Task.new(user: @user, starts_at: @time, ends_at: @time.tomorrow)
-    refute task.save
     task = Task.new(user: @user, starts_at: @time, ends_at: @time.tomorrow + 1)
+    refute task.save
+
+    # 作業時間が24時間ちょうどである
+    task = Task.new(user: @user, starts_at: @time, ends_at: @time.tomorrow)
     refute task.save
   end
 end
