@@ -1,18 +1,22 @@
+- if flash[:notice]
+  - flash[:notice].values.each do |a|
+    = a.first
+    %br
 = l @date, format: :date
 %br
 合計時間:
 = total_time_from_tasks(@tasks, @date) || 'まだタスクが登録されていません。'
 %br
 - @tasks.each do |task|
-  = task.title
+  = task.memo
   = time_format_from_task(task)
   = show_time_range(task)
-  = link_to '[X]', task_path(id: task.id), method: :delete
+  = link_to '[X]', task_path(id: task.id, date: @date), method: :delete
   %br
 = form_for @task, url: tasks_path do |f|
   = datetime_select 'task', 'starts_at', { discard_year: true, minute_step: 10, ampm: true, default: set_time_select_to_now(@date) }
   = datetime_select 'task', 'ends_at', { discard_year: true, minute_step: 10, ampm: true, default: set_time_select_to_now(@date) }
-  = f.text_field :title
+  = f.text_field :memo
   = f.hidden_field :year, value: params[:year]
   = f.hidden_field :month, value: params[:month]
   = f.hidden_field :day, value: params[:day]
