@@ -1,6 +1,7 @@
 - if flash[:notice]
-  = flash[:notice][0].each { |message| message[0] }
-  %br
+  - flash[:notice].values.each do |a|
+    = a.first
+    %br
 = l @date, format: :date
 %br
 合計時間:

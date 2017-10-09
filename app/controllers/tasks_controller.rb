@@ -10,7 +10,7 @@ class TasksController < ApplicationController
       @tasks = Task.where(user: current_user, starts_at: task.starts_at.beginning_of_day..task.starts_at.end_of_day)
       redirect_to tasks_days_path year: task.starts_at.year, month: task.starts_at.month, day: task.starts_at.day
     else
-      flash[:notice] = task.errors.values
+      flash[:notice] = task.errors
       redirect_to tasks_days_path year: task.starts_at.year, month: task.starts_at.month, day: task.starts_at.day
     end
   end
