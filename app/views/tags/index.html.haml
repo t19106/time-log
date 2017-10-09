@@ -1,0 +1,6 @@
+- if @tags
+  - @tags.each do |tag|
+    = tag.name
+    = link_to '[X]', tag_path(id: tag.id), method: :delete
+
+= link_to 'タグを作る', new_tag_path

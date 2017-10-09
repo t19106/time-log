@@ -1,8 +1,4 @@
 Rails.application.routes.draw do
-  get 'tags/new'
-
-  get 'tags/create'
-
   get '/login', to: 'sessions#new'
   post '/login', to: 'sessions#create'
   get 'logout', to: 'sessions#destroy'
@@ -11,5 +7,6 @@ Rails.application.routes.draw do
     get ':year/:month', to: 'months#index', as: 'months', constraints: { year: /[0-9]{4}/, month: /[0-9]{1,2}/ }
     get ':year/:month/:day', to: 'days#index', as: 'days', constraints: { year: /[0-9]{4}/, month: /[0-9]{1,2}/, day: /[0-9]{1,2}/ }
   end
+  resources :tags, only: %i(index new create destroy)
   resources :users, only: %i(new create)
 end
