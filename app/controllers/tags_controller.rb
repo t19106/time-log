@@ -1,5 +1,5 @@
 class TagsController < ApplicationController
-  before_action :set_tag, only: %i(destroy)
+  before_action :set_tag, only: %i(edit update destroy)
 
   def index
     @tags = current_user.tags.all
@@ -16,6 +16,19 @@ class TagsController < ApplicationController
       redirect_to tags_path
     else
       redirect_to tags_path
+    end
+  end
+
+  def edit
+  end
+
+  def update
+    if @tag.update_attributes(tag_params)
+      redirect_to tags_path
+    else
+      respond_to do |format|
+        format.html { render :edit }
+      end
     end
   end
 
