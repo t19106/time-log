@@ -1,0 +1,8 @@
+- if @tag.errors.any?
+  - @tag.errors.full_messages.each do |msg|
+    = msg
+    %br
+
+= form_for @tag do |f|
+  = f.text_area :name
+  = f.submit

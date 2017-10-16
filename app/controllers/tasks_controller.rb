@@ -3,8 +3,7 @@ class TasksController < ApplicationController
 
   def create
     _date = Time.zone.local(params[:task][:year], params[:task][:month], params[:task][:day])
-    task = Task.new(task_params)
-    task.user = current_user
+    task = current_user.tasks.build(task_params)
 
     if task.save
       @tasks = Task.where(user: current_user, starts_at: task.starts_at.beginning_of_day..task.starts_at.end_of_day)
