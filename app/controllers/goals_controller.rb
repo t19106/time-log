@@ -11,6 +11,7 @@ class GoalsController < ApplicationController
     if goal.save
       redirect_to tags_path
     else
+      flash[:notice] = task.errors
       redirect_to tags_path
     end
   end

@@ -20,5 +20,11 @@ ja:
       - :month
       - :day
 
-  errors:
-    messages:
+  activerecord:
+    errors:
+      models:
+        tag:
+          attributes:
+            name:
+              too_long: 'タグ名が20文字を超えました。もう少し短くしてみましょう。'
+              blank: 'タグ名を必ず記入しましょう。'
