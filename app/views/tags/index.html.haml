@@ -1,3 +1,7 @@
+- if flash[:notice]
+  - flash[:notice].values.each do |a|
+    = a.first
+    %br
 - if @tags
   - @tags.each do |tag|
     = tag.name
