@@ -3,10 +3,10 @@ class Goal < ApplicationRecord
   validates :time, presence: true
   validate :less_than_a_month
 
-  HOURS_IN_MONTH = 730
+  SECONDS_IN_28DAYS = 2419200
 
   def less_than_a_month
-    if time.to_i > HOURS_IN_MONTH
+    if ((Time.zone.parse(time).beginning_of_day)..(Time.zone.parse(time).beginning_of_day + SECONDS_IN_28DAYS)).cover?(Time.zone.parse(time))
       errors.add(:time, '一ヶ月を超える期間を、目標時間として設定できません。')
     end
   end
