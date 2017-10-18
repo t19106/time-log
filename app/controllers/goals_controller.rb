@@ -19,7 +19,7 @@ class GoalsController < ApplicationController
   end
 
   def edit
-    @tag = Tag.find(@goal.tag.id)
+    @tag = Tag.find(@goal.tag_id)
   end
 
   def update

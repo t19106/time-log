@@ -1,8 +1,0 @@
-- if flash[:notice]
-  - flash[:notice].values.each do |a|
-    = a.first
-    %br
-= form_for @goal, url: tag_goal_path do |f|
-  = f.time_field :time, include_seconds: false
-  = f.hidden_field :tag_id, value: @tag.id
-  = f.submit
