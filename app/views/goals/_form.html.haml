@@ -4,6 +4,6 @@
     %br
 
 = form_for @goal, url: tag_goals_path do |f|
-  = f.time_field :time, include_seconds: false
+  = f.text_field :time
   = f.hidden_field :tag_id, value: @tag.id
   = f.submit

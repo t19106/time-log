@@ -11,7 +11,7 @@ class GoalTest < ActiveSupport::TestCase
   end
 
   test 'fails validation' do
-    goal = @tag.build_goal(time: '24:00:01')
+    goal = @tag.build_goal(time: '1 23:00:00')
     refute goal.save
   end
 end
