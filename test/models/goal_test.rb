@@ -11,7 +11,18 @@ class GoalTest < ActiveSupport::TestCase
   end
 
   test 'fails validation' do
-    goal = @tag.build_goal(time: '1 23:00:00')
+    #目標時間が設定されていない
+    goal = @tag.build_goal
+    refute goal.save
+
+    # 目標時間が0分である
+    goal = @tag.build_goal(time: '00:00:00')
+    refute goal.save
+
+    # 目標時間が合計28日以上である
+    goal = @tag.build_goal(time: '27 days 23:59:00')
+    assert goal.save
+    goal = @tag.build_goal(time: '28 days 00:00:00')
     refute goal.save
   end
 end
