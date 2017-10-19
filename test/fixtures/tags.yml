@@ -1,9 +1,5 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
-one:
-  user: one
-  name: MyString
-
-two:
-  user: two
-  name: MyString
+tag1:
+  user: user1
+  name: 'Tag'

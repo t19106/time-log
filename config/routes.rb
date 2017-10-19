@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
   get '/login', to: 'sessions#new'
   post '/login', to: 'sessions#create'
-  get 'logout', to: 'sessions#destroy'
+  get '/logout', to: 'sessions#destroy'
   resources :tasks, only: %i(create destroy)
   namespace :tasks do
     get ':year/:month', to: 'months#index', as: 'months', constraints: { year: /[0-9]{4}/, month: /[0-9]{1,2}/ }

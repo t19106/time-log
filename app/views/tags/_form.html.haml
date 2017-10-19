@@ -1,8 +1,7 @@
-- if @tag.errors.any?
-  - @tag.errors.full_messages.each do |msg|
-    = msg
+- if flash[:notice]
+  - flash[:notice].values.each do |a|
+    = a.first
     %br
-
 = form_for @tag do |f|
   = f.text_area :name
   = f.submit

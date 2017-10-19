@@ -11,11 +11,11 @@ class TagsController < ApplicationController
 
   def create
     tag = current_user.tags.build(tag_params)
-
     if tag.save
       redirect_to tags_path
     else
-      redirect_to tags_path
+      flash[:notice] = tag.errors
+      redirect_to new_tag_path
     end
   end
 
@@ -26,9 +26,8 @@ class TagsController < ApplicationController
     if @tag.update_attributes(tag_params)
       redirect_to tags_path
     else
-      respond_to do |format|
-        format.html { render :edit }
-      end
+      flash[:notice] = @tag.errors
+      redirect_to edit_tag_path
     end
   end
 

@@ -28,4 +28,6 @@
 - else
   = link_to "#{params[:year]}#{t :year}#{params[:month].to_i + 1}#{t :month}>", tasks_months_path(year: params[:year], month: params[:month].to_i + 1)
 %br
+= link_to 'タグを作る', tags_path
+%br
 = link_to 'ログアウトする', logout_path
