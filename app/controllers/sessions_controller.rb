@@ -4,7 +4,7 @@ class SessionsController < ApplicationController
   end
 
   def create
-    user = User.find_by(name: user_params[:mail])
+    user = User.find_by(mail: user_params[:mail])
     if user && user.authenticate(user_params[:password])
       session[:user_id] = user.id
       redirect_to tasks_months_path year: Date.today.year, month: Date.today.month

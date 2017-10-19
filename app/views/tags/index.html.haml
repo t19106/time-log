@@ -17,4 +17,4 @@
   %br
 = link_to 'タグを作る', new_tag_path
 %br
-= link_to '一覧へ戻る', tasks_path
+= link_to '一覧へ戻る', "/tasks/#{Time.zone.now.year}/#{Time.zone.now.month}"

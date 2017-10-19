@@ -21,10 +21,21 @@ class Goal < ApplicationRecord
     d_and_t = time =~ /day/ ? time.split(/\s[a-z]{3,4}\s/) : time.split(/\s/)
     if d_and_t[1]
       _time = Time.zone.parse(d_and_t[1]).to_a.take(3).reverse
-      return ((d_and_t[0].to_i * 86400) + (_time[0].to_i * 3600) + (_time[1].to_i * 60) + _time[2].to_i)
+      return ((d_and_t[0].to_i * 1.day.to_i) + (_time[0].to_i * 1.hour.to_i) + (_time[1].to_i * 1.minute.to_i) + _time[2].to_i)
     else
       _time = Time.zone.parse(d_and_t[0]).to_a.take(3).reverse
-      return ((_time[0].to_i * 3600) + (_time[1].to_i * 60) + _time[2].to_i)
+      return ((_time[0].to_i * 1.hour.to_i) + (_time[1].to_i * 1.minute.to_i) + _time[2].to_i)
     end
+  end
+
+  def set_goal_time(hours, minutes)
+    if hours
+      days  = (hours.to_i / 24).to_i
+      hours = (hours.to_i % 24).to_i
+    else
+      days, hours = 0, 0
+    end
+    mins = minutes.to_i || 0
+    self.time = "#{days} #{hours}:#{mins}:00"
   end
 end

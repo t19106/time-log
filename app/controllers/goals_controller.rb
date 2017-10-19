@@ -9,7 +9,7 @@ class GoalsController < ApplicationController
   def create
     tag = Tag.find(params[:tag_id])
     goal = tag.build_goal
-    goal.time = set_goal_time
+    goal.set_goal_time(params[:hours], params[:minutes])
     if goal.save
       redirect_to tags_path
     else
@@ -23,7 +23,7 @@ class GoalsController < ApplicationController
   end
 
   def update
-    @goal.time = set_goal_time
+    @goal.set_goal_time(params[:hours], params[:minutes])
     if @goal.save
       redirect_to tags_path
     else
@@ -41,16 +41,5 @@ class GoalsController < ApplicationController
 
     def set_goal
       @goal = Goal.find_by(id: params[:id])
-    end
-
-    def set_goal_time
-      if params[:hours]
-        days = (params[:hours].to_i / 24).to_i
-        hours = (params[:hours].to_i % 24).to_i
-      else
-        days, hours = 0, 0
-      end
-      mins = params[:minutes].to_i || 0
-      "#{days} #{hours}:#{mins}:00"
     end
 end
