@@ -1,11 +1,13 @@
 class Task < ApplicationRecord
   belongs_to :user
+  has_one :tags
 
   validates :starts_at, presence: true
   validates :ends_at, presence: true
   validate :ended_after_started
   validate :started_and_ended_are_different
   validate :less_than_a_day
+  validate :tasks_not_overlapping
 
   def ended_after_started
     return if starts_at.nil? || ends_at.nil?
@@ -25,6 +27,18 @@ class Task < ApplicationRecord
     return if starts_at.nil? || ends_at.nil?
     unless to_hours < 24
       errors.add(:ends_at, '24時間を超えるタスクは設定できません。')
+    end
+  end
+
+  def tasks_not_overlapping
+    return if starts_at.nil? || ends_at.nil?
+    tasks = Task.where(user: user_id, starts_at: self.starts_at.beginning_of_day..self.starts_at.end_of_day).or(Task.where(user: user_id, ends_at: self.ends_at.beginning_of_day..self.ends_at.end_of_day)).map { |task| task.adjust_overnight_range(@date) }
+    tasks.each do |task|
+      if (task.starts_at..task.ends_at).cover?(self.starts_at) || (task.starts_at..task.ends_at).cover?(self.ends_at)
+        unless task.starts_at == self.ends_at || task.ends_at == self.starts_at
+          errors.add(:ends_at, '他のタスクと時間が重複しています。')
+        end
+      end
     end
   end
 

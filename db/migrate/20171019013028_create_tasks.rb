@@ -5,6 +5,7 @@ class CreateTasks < ActiveRecord::Migration[5.1]
       t.datetime :ends_at
       t.string :memo
       t.references :user, foreign_key: true
+      t.references :tag, foreign_key: true
       t.timestamps
     end
   end

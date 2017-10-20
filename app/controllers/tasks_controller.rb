@@ -23,6 +23,6 @@ class TasksController < ApplicationController
   private
 
     def task_params
-      params.require(:task).permit(:memo, :starts_at, :ends_at)
+      params.require(:task).permit(:memo, :starts_at, :ends_at, :tag_id)
     end
 end
