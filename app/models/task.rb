@@ -32,9 +32,9 @@ class Task < ApplicationRecord
 
   def tasks_not_overlapping
     return if starts_at.nil? || ends_at.nil?
-    tasks = Task.where(user: user_id, starts_at: self.starts_at.beginning_of_day..self.starts_at.end_of_day).or(Task.where(user: user_id, ends_at: self.ends_at.beginning_of_day..self.ends_at.end_of_day)).map { |task| task.adjust_overnight_range(@date) }
+    tasks = Task.where(user: user_id, starts_at: self.starts_at.beginning_of_day..self.starts_at.end_of_day).or(Task.where(user: user_id, ends_at: self.ends_at.beginning_of_day..self.ends_at.end_of_day)).map { |task| task.adjust_overnight_range(self.starts_at) }
     tasks.each do |task|
-      if (task.starts_at..task.ends_at).cover?(self.starts_at) || (task.starts_at..task.ends_at).cover?(self.ends_at)
+      if (task.starts_at..task.ends_at).cover?(self.starts_at) || (task.starts_at..task.ends_at).cover?(self.ends_at) || (self.starts_at..self.ends_at).cover?(task.starts_at) || (self.starts_at..self.ends_at).cover?(task.ends_at)
         unless task.starts_at == self.ends_at || task.ends_at == self.starts_at
           errors.add(:ends_at, '他のタスクと時間が重複しています。')
         end

@@ -3,7 +3,7 @@ require 'test_helper'
 class TaskTest < ActiveSupport::TestCase
   def setup
     @user = users(:user1)
-    @time = Time.zone.now
+    @time = Time.zone.parse('12:00')
   end
 
   test 'passes validation' do
@@ -34,8 +34,19 @@ class TaskTest < ActiveSupport::TestCase
 
     # 作業時間は重複できない
     # ただし、時間の端（前者終了時間と後者開始時間）は重複しても構わない
+
+    # 軸となるタスク
     main_task = Task.new(user: @user, starts_at: @time, ends_at: @time + 1.hour.to_i)
     assert main_task.save
+
+    # 時間の重複 - すでに存在するタスクと、全く同じ時間で新しいタスクを保存できない
+    task = Task.new(user: @user, starts_at: @time, ends_at: @time + 1.hour.to_i) # main_taskと同じ時間
+    refute task.save
+
+    # 時間の重複 - すでに存在するタスクを囲うかのように、タスクを保存できない
+    # イメージ => (新しい(既存のタスク)タスク)
+    task = Task.new(user: @user, starts_at: @time - 1.hour.to_i, ends_at: @time + 2.hours.to_i)
+    refute task.save
 
     # 前後一時間の保存
     # 時間の端がちょうど重複する分には問題ない
@@ -50,11 +61,11 @@ class TaskTest < ActiveSupport::TestCase
     task = Task.new(user: @user, starts_at: @time + 1, ends_at: @time + 59.minutes.to_i)
     refute task.save
 
-    # 時間の重複 - task_before内に時間設定（afterは同じことをするだけなので割愛）
+    # 時間の重複 - task_before内に時間設定（afterにしても、同じことをするだけなので割愛）
     task = Task.new(user: @user, starts_at: @time - 1.5.hour.to_i, ends_at: @time - 30.minutes.to_i)
     refute task.save
 
-    # 時間の重複 - task_before、task_after内に時間設定
+    # 時間の重複 - 片方がtask_before、もう片方がtask_after内に時間設定
     main_task.delete
     task = Task.new(user: @user, starts_at: @time - 0.5.hour.to_i, ends_at: @time - 1.5.hours.to_i)
     refute task.save
