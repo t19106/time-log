@@ -32,10 +32,9 @@ class Task < ApplicationRecord
 
   def tasks_not_overlapping
     return if starts_at.nil? || ends_at.nil?
-    tasks = Task.where(user: user_id, starts_at: self.starts_at.beginning_of_day..self.starts_at.end_of_day).or(Task.where(user: user_id, ends_at: self.ends_at.beginning_of_day..self.ends_at.end_of_day)).map { |task| task.adjust_overnight_range(self.starts_at) }
-    tasks.each do |task|
-      if (task.starts_at..task.ends_at).cover?(self.starts_at) || (task.starts_at..task.ends_at).cover?(self.ends_at) || (self.starts_at..self.ends_at).cover?(task.starts_at) || (self.starts_at..self.ends_at).cover?(task.ends_at)
-        unless task.starts_at == self.ends_at || task.ends_at == self.starts_at
+    same_day_tasks.each do |task|
+      if overlapping?(task)
+        unless tasks_side_by_side?(task)
           errors.add(:ends_at, '他のタスクと時間が重複しています。')
         end
       end
@@ -43,14 +42,14 @@ class Task < ApplicationRecord
   end
 
   def to_hours
-    ((ends_at - starts_at) / 60 / 60).to_i
+    ((ends_at - starts_at) / 1.hour.to_i).to_i
   end
 
   def to_minutes
-    (((ends_at - starts_at) / 60) % 60).to_i
+    (((ends_at - starts_at) / 1.minute.to_i) % 1.minute.to_i).to_i
   end
 
-  def is_overnight?
+  def overnight?
     starts_at.day != ends_at.day
   end
 
@@ -59,14 +58,27 @@ class Task < ApplicationRecord
   end
 
   def adjust_overnight_range(date)
-    return self unless is_overnight?
+    return self unless overnight?
     _task = self.clone
     if starts_at < date.beginning_of_day
-      _task.starts_at = starts_at.change(day: date.day, hour: 0, min: 0)
-      _task.starts_at = starts_at.change(month: date.month, day: date.day, hour: 0, min: 0) if over_end_of_month?
+      _task.starts_at = over_end_of_month? ? starts_at.change(month: date.month, day: date.day, hour: 0, min: 0) : starts_at.change(day: date.day, hour: 0, min: 0)
     elsif ends_at > date.end_of_day
       _task.ends_at = ends_at.change(day: date.tomorrow.day, hour: 0, min: 0)
     end
     _task
   end
+
+  private
+
+    def same_day_tasks
+      Task.where(user: user_id, starts_at: self.starts_at.beginning_of_day..self.starts_at.end_of_day).or(Task.where(user: user_id, ends_at: self.ends_at.beginning_of_day..self.ends_at.end_of_day)).map { |task| task.adjust_overnight_range(self.starts_at) }
+    end
+
+    def overlapping?(task)
+      (task.starts_at..task.ends_at).cover?(self.starts_at) || (task.starts_at..task.ends_at).cover?(self.ends_at) || (self.starts_at..self.ends_at).cover?(task.starts_at) || (self.starts_at..self.ends_at).cover?(task.ends_at)
+    end
+
+    def tasks_side_by_side?(task)
+      task.starts_at == self.ends_at || task.ends_at == self.starts_at
+    end
 end

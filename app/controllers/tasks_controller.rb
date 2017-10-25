@@ -2,11 +2,9 @@ class TasksController < ApplicationController
   before_action :verify_user
 
   def create
-    _date = Time.zone.local(params[:task][:year], params[:task][:month], params[:task][:day])
     task = current_user.tasks.build(task_params)
 
     if task.save
-      @tasks = Task.where(user: current_user, starts_at: task.starts_at.beginning_of_day..task.starts_at.end_of_day)
       redirect_to tasks_days_path year: task.starts_at.year, month: task.starts_at.month, day: task.starts_at.day
     else
       flash[:notice] = task.errors
