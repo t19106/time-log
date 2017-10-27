@@ -1,7 +1,8 @@
 class Tasks::MonthsController < ApplicationController
-  before_action :verify_user, :validate_uri
+  include DateValidation
+  before_action :verify_user, :validate_date_uri
 
   def index
-    @tasks = Task.tasks_by_month(@date, current_user)
+    @tasks = Task.tasks_by_month(params_datetime, current_user)
   end
 end

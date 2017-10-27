@@ -32,7 +32,8 @@ class Task < ApplicationRecord
 
   def tasks_not_overlapping
     return if starts_at.nil? || ends_at.nil?
-    Task.tasks_by_date(starts_at, user_id).each do |task|
+    user = User.find(user_id)
+    Task.tasks_by_date(starts_at, user).each do |task|
       if overlapping?(task)
         unless tasks_side_by_side?(task)
           errors.add(:ends_at, '他のタスクと時間が重複しています。')
@@ -46,11 +47,11 @@ class Task < ApplicationRecord
   end
 
   def self.monthly_tasks_by_starts_at(date, user)
-    Task.where(user: user, starts_at: date.beginning_of_month..date.end_of_month).map { |task| task.adjust_overnight_range(task.starts_at) }.group_by { |t| t.starts_at.day }
+    user.tasks.where(starts_at: date.beginning_of_month..date.end_of_month).map { |task| task.adjust_overnight_range(task.starts_at) }.group_by { |t| t.starts_at.day }
   end
 
   def self.monthly_tasks_by_ends_at(date, user)
-    Task.where(user: user, ends_at: date.beginning_of_month..date.end_of_month).map { |task| task.adjust_overnight_range(task.ends_at) }.group_by { |t| t.ends_at.day }
+    user.tasks.where(ends_at: date.beginning_of_month..date.end_of_month).map { |task| task.adjust_overnight_range(task.ends_at) }.group_by { |t| t.ends_at.day }
   end
 
   def self.tasks_by_date(date, user)
@@ -58,11 +59,11 @@ class Task < ApplicationRecord
   end
 
   def self.same_day_tasks_by_starts_at(date, user)
-    Task.where(user: user, starts_at: date.beginning_of_day..date.end_of_day)
+    user.tasks.where(starts_at: date.beginning_of_day..date.end_of_day)
   end
 
   def self.same_day_tasks_by_ends_at(date, user)
-    Task.where(user: user, ends_at: date.beginning_of_day..date.end_of_day)
+    user.tasks.where(ends_at: date.beginning_of_day..date.end_of_day)
   end
 
   def to_hours
@@ -75,13 +76,16 @@ class Task < ApplicationRecord
 
   def adjust_overnight_range(date)
     return self unless overnight?
-    _task = self.clone
-    if starts_at < date.beginning_of_day
-      _task.starts_at = over_end_of_month? ? starts_at.change(month: date.month, day: date.day, hour: 0, min: 0) : starts_at.change(day: date.day, hour: 0, min: 0)
-    elsif ends_at > date.end_of_day
-      _task.ends_at = ends_at.change(day: date.tomorrow.day, hour: 0, min: 0)
+    if from_yesterday?(date)
+      if over_end_of_month?
+        starts_at = starts_at.change(month: date.month, day: date.day, hour: 0, min: 0)
+      else
+        starts_at = starts_at.change(day: date.day, hour: 0, min: 0)
+      end
+    elsif ends_tomorrow?(date)
+      ends_at = ends_at.change(day: date.tomorrow.day, hour: 0, min: 0)
     end
-    _task
+    self
   end
 
   private
@@ -92,6 +96,14 @@ class Task < ApplicationRecord
 
     def over_end_of_month?
       starts_at.month != ends_at.month
+    end
+
+    def from_yesterday?(date)
+      starts_at < date.beginning_of_day
+    end
+
+    def ends_tomorrow?(date)
+      ends_at > date.end_of_day
     end
 
     def overlapping?(task)
