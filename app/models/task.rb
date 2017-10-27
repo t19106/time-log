@@ -10,28 +10,28 @@ class Task < ApplicationRecord
   validate :tasks_not_overlapping
 
   def ended_after_started
-    return if starts_at.nil? || ends_at.nil?
+    return unless time_set?
     if starts_at > ends_at
       errors.add(:ends_at, '終了時間は開始時間より前に設定できません。')
     end
   end
 
   def started_and_ended_are_different
-    return if starts_at.nil? || ends_at.nil?
+    return unless time_set?
     if starts_at == ends_at
       errors.add(:ends_at, '開始時間と終了時間が同じです。0分以上の作業時間を登録しましょう。')
     end
   end
 
   def less_than_a_day
-    return if starts_at.nil? || ends_at.nil?
+    return unless time_set?
     unless to_hours < 24
       errors.add(:ends_at, '24時間を超えるタスクは設定できません。')
     end
   end
 
   def tasks_not_overlapping
-    return if starts_at.nil? || ends_at.nil?
+    return unless time_set?
     user = User.find(user_id)
     Task.tasks_by_date(starts_at, user).each do |task|
       if overlapping?(task)
@@ -76,7 +76,7 @@ class Task < ApplicationRecord
 
   def adjust_overnight_range(date)
     return self unless overnight?
-    if from_yesterday?(date)
+    if started_yesterday?(date)
       if over_end_of_month?
         starts_at = starts_at.change(month: date.month, day: date.day, hour: 0, min: 0)
       else
@@ -90,6 +90,10 @@ class Task < ApplicationRecord
 
   private
 
+    def time_set?
+      starts_at && ends_at
+    end
+
     def overnight?
       starts_at.day != ends_at.day
     end
@@ -98,7 +102,7 @@ class Task < ApplicationRecord
       starts_at.month != ends_at.month
     end
 
-    def from_yesterday?(date)
+    def started_yesterday?(date)
       starts_at < date.beginning_of_day
     end
 
