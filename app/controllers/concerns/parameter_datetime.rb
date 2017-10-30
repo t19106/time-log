@@ -1,4 +1,4 @@
-module DateValidation
+module ParameterDatetime
   extend ActiveSupport::Concern
 
   def validate_date_uri
@@ -8,5 +8,9 @@ module DateValidation
       flash[:alert] = '存在しない日付へアクセスされようとしました。今月のページへ戻ります。'
       redirect_to tasks_months_path year: Time.zone.now.year, month: Time.zone.now.month
     end
+  end
+
+  def params_datetime
+    @date = Time.zone.local(params[:year], params[:month], params[:day])
   end
 end

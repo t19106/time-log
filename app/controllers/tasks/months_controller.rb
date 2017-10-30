@@ -1,5 +1,5 @@
 class Tasks::MonthsController < ApplicationController
-  include DateValidation
+  include ParameterDatetime
   before_action :verify_user, :validate_date_uri
 
   def index
