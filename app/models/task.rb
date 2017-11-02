@@ -78,12 +78,12 @@ class Task < ApplicationRecord
     return self unless overnight?
     if started_yesterday?(date)
       if over_end_of_month?
-        starts_at = starts_at.change(month: date.month, day: date.day, hour: 0, min: 0)
+        self.starts_at = self.starts_at.change(month: date.month, day: date.day, hour: 0, min: 0)
       else
-        starts_at = starts_at.change(day: date.day, hour: 0, min: 0)
+        self.starts_at = self.starts_at.change(day: date.day, hour: 0, min: 0)
       end
     elsif ends_tomorrow?(date)
-      ends_at = ends_at.change(day: date.tomorrow.day, hour: 0, min: 0)
+      self.ends_at = self.ends_at.change(day: date.tomorrow.day, hour: 0, min: 0)
     end
     self
   end
