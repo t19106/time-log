@@ -3,7 +3,14 @@ class Tasks::DaysController < ApplicationController
   before_action :verify_user, :validate_date_uri
 
   def index
-    @tasks = Task.tasks_by_date(params_datetime, current_user)
+    @tasks = tasks_by_month
     @task  = Task.new
+  end
+
+  private
+
+  def tasks_by_month
+    relation = Task::Relation.new(params_datetime, current_user)
+    relation.tasks_by_date
   end
 end

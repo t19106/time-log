@@ -9,30 +9,6 @@ class Task < ApplicationRecord
   validate :less_than_a_day
   validate :tasks_not_overlapping
 
-  def self.tasks_by_month(date, user)
-    monthly_tasks_by_starts_at(date, user).merge(monthly_tasks_by_ends_at(date, user)) { |_k, v1, v2| v1.concat(v2).uniq.sort_by { |t| t.starts_at } }
-  end
-
-  def self.monthly_tasks_by_starts_at(date, user)
-    user.tasks.where(starts_at: date.beginning_of_month..date.end_of_month).map { |task| task.adjust_overnight_range(task.starts_at) }.group_by { |t| t.starts_at.day }
-  end
-
-  def self.monthly_tasks_by_ends_at(date, user)
-    user.tasks.where(ends_at: date.beginning_of_month..date.end_of_month).map { |task| task.adjust_overnight_range(task.ends_at) }.group_by { |t| t.ends_at.day }
-  end
-
-  def self.tasks_by_date(date, user)
-    same_day_tasks_by_starts_at(date, user).or(same_day_tasks_by_ends_at(date, user)).map { |task| task.adjust_overnight_range(task.starts_at) }.sort_by { |t| t.starts_at }
-  end
-
-  def self.same_day_tasks_by_starts_at(date, user)
-    user.tasks.where(starts_at: date.beginning_of_day..date.end_of_day)
-  end
-
-  def self.same_day_tasks_by_ends_at(date, user)
-    user.tasks.where(ends_at: date.beginning_of_day..date.end_of_day)
-  end
-
   def to_hours
     ((ends_at - starts_at) / 1.hour.to_i).to_i
   end
@@ -75,9 +51,11 @@ class Task < ApplicationRecord
   def tasks_not_overlapping
     return unless time_set?
     user = User.find(user_id)
-    Task.tasks_by_date(starts_at, user).each do |task|
-      next unless overlapping?(task)
-      errors.add(:ends_at, '他のタスクと時間が重複しています。') unless tasks_side_by_side?(task)
+    relation = Task::Relation.new(starts_at, user)
+    relation.tasks_by_date.each do |task|
+      if overlapping?(task)
+        errors.add(:ends_at, '他のタスクと時間が重複しています。') unless tasks_side_by_side?(task)
+      end
     end
   end
 
