@@ -9,39 +9,6 @@ class Task < ApplicationRecord
   validate :less_than_a_day
   validate :tasks_not_overlapping
 
-  def ended_after_started
-    return unless time_set?
-    if starts_at > ends_at
-      errors.add(:ends_at, '終了時間は開始時間より前に設定できません。')
-    end
-  end
-
-  def started_and_ended_are_different
-    return unless time_set?
-    if starts_at == ends_at
-      errors.add(:ends_at, '開始時間と終了時間が同じです。0分以上の作業時間を登録しましょう。')
-    end
-  end
-
-  def less_than_a_day
-    return unless time_set?
-    unless to_hours < 24
-      errors.add(:ends_at, '24時間を超えるタスクは設定できません。')
-    end
-  end
-
-  def tasks_not_overlapping
-    return unless time_set?
-    user = User.find(user_id)
-    Task.tasks_by_date(starts_at, user).each do |task|
-      if overlapping?(task)
-        unless tasks_side_by_side?(task)
-          errors.add(:ends_at, '他のタスクと時間が重複しています。')
-        end
-      end
-    end
-  end
-
   def self.tasks_by_month(date, user)
     monthly_tasks_by_starts_at(date, user).merge(monthly_tasks_by_ends_at(date, user)) { |_k, v1, v2| v1.concat(v2).uniq.sort_by { |t| t.starts_at } }
   end
@@ -90,39 +57,63 @@ class Task < ApplicationRecord
 
   private
 
-    def time_set?
-      starts_at && ends_at
-    end
+  def ended_after_started
+    return unless time_set?
+    errors.add(:ends_at, '終了時間は開始時間より前に設定できません。') if starts_at > ends_at
+  end
 
-    def overnight?
-      starts_at.day != ends_at.day
-    end
+  def started_and_ended_are_different
+    return unless time_set?
+    errors.add(:ends_at, '開始時間と終了時間が同じです。0分以上の作業時間を登録しましょう。') if starts_at == ends_at
+  end
 
-    def over_end_of_month?
-      starts_at.month != ends_at.month
-    end
+  def less_than_a_day
+    return unless time_set?
+    errors.add(:ends_at, '24時間を超えるタスクは設定できません。') unless to_hours < 24
+  end
 
-    def started_yesterday?(date)
-      starts_at < date.beginning_of_day
+  def tasks_not_overlapping
+    return unless time_set?
+    user = User.find(user_id)
+    Task.tasks_by_date(starts_at, user).each do |task|
+      next unless overlapping?(task)
+      errors.add(:ends_at, '他のタスクと時間が重複しています。') unless tasks_side_by_side?(task)
     end
+  end
 
-    def ends_tomorrow?(date)
-      ends_at > date.end_of_day
-    end
+  def time_set?
+    starts_at && ends_at
+  end
 
-    def overlapping?(task)
-      surrounded_by_task?(task) || surrounds_the_task?(task)
-    end
+  def overnight?
+    starts_at.day != ends_at.day
+  end
 
-    def surrounded_by_task?(task)
-      (task.starts_at..task.ends_at).cover?(self.starts_at) || (task.starts_at..task.ends_at).cover?(self.ends_at)
-    end
+  def over_end_of_month?
+    starts_at.month != ends_at.month
+  end
 
-    def surrounds_the_task?(task)
-      (self.starts_at..self.ends_at).cover?(task.starts_at) || (self.starts_at..self.ends_at).cover?(task.ends_at)
-    end
+  def started_yesterday?(date)
+    starts_at < date.beginning_of_day
+  end
 
-    def tasks_side_by_side?(task)
-      task.starts_at == self.ends_at || task.ends_at == self.starts_at
-    end
+  def ends_tomorrow?(date)
+    ends_at > date.end_of_day
+  end
+
+  def overlapping?(task)
+    surrounded_by_task?(task) || surrounds_the_task?(task)
+  end
+
+  def surrounded_by_task?(task)
+    (task.starts_at..task.ends_at).cover?(self.starts_at) || (task.starts_at..task.ends_at).cover?(self.ends_at)
+  end
+
+  def surrounds_the_task?(task)
+    (self.starts_at..self.ends_at).cover?(task.starts_at) || (self.starts_at..self.ends_at).cover?(task.ends_at)
+  end
+
+  def tasks_side_by_side?(task)
+    task.starts_at == self.ends_at || task.ends_at == self.starts_at
+  end
 end
