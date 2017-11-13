@@ -6,6 +6,8 @@
 
 .ruby-version
 
+coverage
+
 # Ignore bundler config.
 /vendor/bundle/*
 /.bundle
