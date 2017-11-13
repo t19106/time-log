@@ -20,18 +20,26 @@ class Task < ApplicationRecord
   def adjust_overnight_range(date)
     return self unless overnight?
     if started_yesterday?(date)
-      if over_end_of_month?
-        self.starts_at = self.starts_at.change(month: date.month, day: date.day, hour: 0, min: 0)
-      else
-        self.starts_at = self.starts_at.change(day: date.day, hour: 0, min: 0)
-      end
+      self.starts_at = adjusted_start_time(date)
     elsif ends_tomorrow?(date)
-      self.ends_at = self.ends_at.change(day: date.tomorrow.day, hour: 0, min: 0)
+      self.ends_at = adjusted_end_time(date)
     end
     self
   end
 
   private
+
+  def adjusted_start_time(date)
+    if over_end_of_month?
+      self.starts_at.change(month: date.month, day: date.day, hour: 0, min: 0)
+    else
+      self.starts_at.change(day: date.day, hour: 0, min: 0)
+    end
+  end
+
+  def adjusted_end_time(date)
+    self.ends_at.change(day: date.tomorrow.day, hour: 0, min: 0)
+  end
 
   def ended_after_started
     return unless time_set?
@@ -53,9 +61,8 @@ class Task < ApplicationRecord
     user = User.find(user_id)
     relation = Task::Relation.new(starts_at, user)
     relation.tasks_by_date.each do |task|
-      if overlapping?(task)
-        errors.add(:ends_at, '他のタスクと時間が重複しています。') unless tasks_side_by_side?(task)
-      end
+      next unless overlapping?(task)
+      errors.add(:ends_at, '他のタスクと時間が重複しています。') unless tasks_side_by_side?(task)
     end
   end
 

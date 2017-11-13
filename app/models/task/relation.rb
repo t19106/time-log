@@ -14,7 +14,7 @@ class Task::Relation
 
   def tasks_by_date
     tasks = same_day_tasks_by_start.or(same_day_tasks_by_end).map do |task|
-      task.adjust_overnight_range(task.starts_at)
+      task.adjust_overnight_range(@date)
     end
     tasks.sort_by(&:starts_at)
   end
