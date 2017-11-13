@@ -70,4 +70,28 @@ class TaskTest < ActiveSupport::TestCase
     task = Task.new(user: @user, starts_at: @time - 0.5.hour.to_i, ends_at: @time - 1.5.hours.to_i)
     refute task.save
   end
+
+  test 'to_hours' do
+    assert_equal 1, tasks(:task1).to_hours
+  end
+
+  test 'to_minutes' do
+    assert_equal 30, tasks(:task1).to_minutes
+  end
+
+  test 'adjust_overnight_range' do
+    # タスク終了が基準日の翌日の場合、終了時間が日付の終了時点に丸められる
+    task = tasks(:task2)
+    date = task.starts_at
+    assert_equal date.tomorrow.beginning_of_day, task.adjust_overnight_range(date).ends_at
+
+    # タスク開始が基準日の前日の場合、開始時間が日付の開始時点に丸められる
+    date = task.ends_at
+    assert_equal date.beginning_of_day, task.adjust_overnight_range(date).starts_at
+
+    # タスク開始が基準日の前日で、かつそれが前の月の最終日の場合、開始時間が翌月初日の開始時点に丸められる
+    task = tasks(:task3)
+    date = task.ends_at
+    assert_equal date.beginning_of_day, task.adjust_overnight_range(date).starts_at
+  end
 end

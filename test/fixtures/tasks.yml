@@ -3,5 +3,17 @@
 task1:
   user: user1
   memo: 'test task'
-  starts_at: <%= Time.zone.local(2017, 10, 1) %>
-  ends_at: <%= Time.zone.local(2017, 10, 1) %>
+  starts_at: <%= Time.zone.local(2017, 10, 1, 12, 0) %>
+  ends_at: <%= Time.zone.local(2017, 10, 1, 13, 30) %>
+
+task2:
+  user: user1
+  memo: 'test task'
+  starts_at: <%= Time.zone.local(2017, 10, 1, 23, 30) %>
+  ends_at: <%= Time.zone.local(2017, 10, 2, 0, 30) %>
+
+task3:
+  user: user1
+  memo: 'test task'
+  starts_at: <%= Time.zone.local(2017, 9, 30, 23, 30) %>
+  ends_at: <%= Time.zone.local(2017, 10, 1, 0, 30) %>
