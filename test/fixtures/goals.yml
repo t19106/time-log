@@ -1,5 +1,5 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 goal1:
-  tag: tag1
+  tag_id: 1
   time: '1 day 12:00:00'

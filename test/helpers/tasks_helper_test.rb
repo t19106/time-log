@@ -15,7 +15,7 @@ class TasksHelperTest < ActiveSupport::TestCase
   end
 
   test 'set_time_select_to_now' do
-    date1 = Time.new(2017, 10, 1, 12, 0, 0)
+    date1 = Time.zone.local(2017, 10, 1, 12, 0, 0)
     assert_equal date1, set_time_select_to_now(date1)
     date2 = Time.new(2017, 10, 1, 12, 59, 0)
     assert_equal Time.new(2017, 10, 1, 13, 0, 0), set_time_select_to_now(date2)
