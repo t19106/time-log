@@ -1,19 +1,29 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 task1:
-  user: user1
+  id: 1
+  user_id: 1
   memo: 'test task'
   starts_at: <%= Time.zone.local(2017, 10, 1, 12, 0) %>
   ends_at: <%= Time.zone.local(2017, 10, 1, 13, 30) %>
 
 task2:
-  user: user1
+  id: 2
+  user_id: 1
+  memo: 'test task'
+  starts_at: <%= Time.zone.local(2017, 10, 1, 13, 30) %>
+  ends_at: <%= Time.zone.local(2017, 10, 1, 14, 00) %>
+
+task3:
+  id: 3
+  user_id: 1
   memo: 'test task'
   starts_at: <%= Time.zone.local(2017, 10, 1, 23, 30) %>
   ends_at: <%= Time.zone.local(2017, 10, 2, 0, 30) %>
 
-task3:
-  user: user1
+task4:
+  id: 4
+  user_id: 1
   memo: 'test task'
   starts_at: <%= Time.zone.local(2017, 9, 30, 23, 30) %>
   ends_at: <%= Time.zone.local(2017, 10, 1, 0, 30) %>

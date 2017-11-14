@@ -81,7 +81,7 @@ class TaskTest < ActiveSupport::TestCase
 
   test 'adjust_overnight_range' do
     # タスク終了が基準日の翌日の場合、終了時間が日付の終了時点に丸められる
-    task = tasks(:task2)
+    task = tasks(:task3)
     date = task.starts_at
     assert_equal date.tomorrow.beginning_of_day, task.adjust_overnight_range(date).ends_at
 
