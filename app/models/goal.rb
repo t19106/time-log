@@ -22,11 +22,12 @@ class Goal < ApplicationRecord
   end
 
   def set_goal_time(hours, minutes)
-    if hours
+    if hours > 0
       days  = (hours.to_i / 24).to_i
       hours = (hours.to_i % 24).to_i
     else
-      days, hours = 0, 0
+      days  = 0
+      hours = 0
     end
     mins = minutes.to_i || 0
     self.time = "#{days} #{hours}:#{mins}:00"

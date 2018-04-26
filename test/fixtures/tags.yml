@@ -1,5 +1,5 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 tag1:
-  user: user1
+  user_id: 1
   name: 'Tag'

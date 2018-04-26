@@ -25,4 +25,14 @@ class GoalTest < ActiveSupport::TestCase
     goal = @tag.build_goal(time: '28 days 00:00:00')
     refute goal.save
   end
+
+  test 'set_goal_time' do
+    goal = Goal.new
+    goal.set_goal_time(12, 0)
+    assert_equal '0 12:0:00', goal.time
+    goal.set_goal_time(36, 0)
+    assert_equal '1 12:0:00', goal.time
+    goal.set_goal_time(0, 30)
+    assert_equal '0 0:30:00', goal.time
+  end
 end

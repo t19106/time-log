@@ -1,8 +1,16 @@
 class Tasks::DaysController < ApplicationController
-  before_action :verify_user, :validate_uri
+  include ParameterDatetime
+  before_action :verify_user, :validate_date_uri
 
   def index
-    @tasks = Task.where(user: current_user, starts_at: @date.beginning_of_day..@date.end_of_day).or(Task.where(user: current_user, ends_at: @date.beginning_of_day..@date.end_of_day)).map { |task| task.adjust_overnight_range(@date) }.sort_by { |t| t.starts_at }
-    @task = Task.new
+    @tasks = tasks_by_month
+    @task  = Task.new
+  end
+
+  private
+
+  def tasks_by_month
+    relation = Task::Relation.new(params_datetime, current_user)
+    relation.tasks_by_date
   end
 end
