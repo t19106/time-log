@@ -3,13 +3,31 @@ class Tasks::MonthsController < ApplicationController
   before_action :verify_user, :validate_date_uri
 
   def index
-    @tasks = tasks_by_month
+    set_tasks_by_month
+    set_goal_times_achievements if @tasks.values
   end
 
   private
 
-  def tasks_by_month
+  def set_tasks_by_month
     relation = Task::Relation.new(params_datetime, current_user)
-    relation.tasks_by_month
+    @tasks = relation.tasks_by_month
+  end
+
+  def set_goal_times_achievements
+    @goals = {}
+    @achievements = {}
+    @tasks.values.each do |array|
+      array.each do |task|
+        tag = Tag.find(task.tag_id)
+        next unless tag
+        @goals[tag.name] ||= tag.goal.to_seconds
+        if @achievements[tag.name]
+          @achievements[tag.name] += task.to_seconds
+        else
+          @achievements[tag.name] ||= task.to_seconds
+        end
+      end
+    end
   end
 end

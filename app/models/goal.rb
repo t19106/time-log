@@ -8,21 +8,21 @@ class Goal < ApplicationRecord
 
   def is_not_zero_minute
     return unless time
-    errors.add(:time, '毎月の目標時間を、0分に設定することはできません。') if in_seconds == 0
+    errors.add(:time, '毎月の目標時間を、0分に設定することはできません。') if to_seconds == 0
   end
 
   def less_than_a_month
     return unless time
-    errors.add(:time, '毎月の目標時間を、合計28日以上に設定することはできません。') if in_seconds >= SECONDS_IN_28DAYS
+    errors.add(:time, '毎月の目標時間を、合計28日以上に設定することはできません。') if to_seconds >= SECONDS_IN_28DAYS
   end
 
-  def in_seconds
+  def to_seconds
     return unless time
     Goals::IntervalParser.new(time).to_seconds
   end
 
   def set_goal_time(hours, minutes)
-    if hours > 0
+    if hours.to_i > 0
       days  = (hours.to_i / 24).to_i
       hours = (hours.to_i % 24).to_i
     else
