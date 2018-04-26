@@ -17,6 +17,10 @@ class Task < ApplicationRecord
     (((ends_at - starts_at) / 1.minute.to_i) % 1.minute.to_i).to_i
   end
 
+  def to_seconds
+    (ends_at - starts_at).to_i
+  end
+
   def adjust_overnight_range(date)
     return self unless overnight?
     if started_yesterday?(date)
