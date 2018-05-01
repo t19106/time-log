@@ -11,4 +11,5 @@ Rails.application.routes.draw do
     resources :goals, on: :collection, except: %i(index show)
   end
   resources :users, only: %i(new create)
+  resources :account_activations, only: %i(edit)
 end

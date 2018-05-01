@@ -53,4 +53,8 @@ Rails.application.configure do
   config.file_watcher = ActiveSupport::EventedFileUpdateChecker
 
   config.log_level = :debug
+
+  host = 'samplehost'
+  Rails.application.routes.default_url_options[:host] = host
+  config.action_mailer.default_url_options = { host: "samplehost" }
 end
