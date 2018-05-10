@@ -23,12 +23,15 @@
   - @achievements.each do |name, time|
     = name
     = achievement_time_format(time)
-    - if @goals[name] < time
-      今月はゴール目標を達成しています。
+    - if @goals[name]
+      - if @goals[name] <= time
+        今月はゴール目標を達成しています。
+      - else
+        残り
+        = achievement_time_format(@goals[name] - time)
+        で、今月の目標を達成します。
     - else
-      残り
-      = achievement_time_format(@goals[name] - time)
-      で、今月の目標を達成します。
+      このタグには、毎月の目標時間が設定されていません。
     %br
 - else
   今月分のタスクに目標時間が設定されたタグが使われると、ここに今月の目標達成度が表示されます。

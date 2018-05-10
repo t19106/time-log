@@ -19,9 +19,10 @@ class Tasks::MonthsController < ApplicationController
     @achievements = {}
     @tasks.values.each do |array|
       array.each do |task|
+        next unless task.tag_id
         tag = Tag.find(task.tag_id)
         next unless tag
-        @goals[tag.name] ||= tag.goal.to_seconds
+        @goals[tag.name] ||= tag.goal.to_seconds if tag.goal
         if @achievements[tag.name]
           @achievements[tag.name] += task.to_seconds
         else
