@@ -7,7 +7,7 @@ class ApplicationController < ActionController::Base
   end
 
   def verify_user
-    redirect_to login_path unless current_user.login?
+    redirect_to login_path unless current_user.login? && current_user.activated?
   end
 
   def is_login?
