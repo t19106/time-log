@@ -19,9 +19,17 @@
         %br
   %br
 
+登録タグ：
+%br
 - if @achievements
+  - if @achievements.blank?
+    - Tag.where(user: current_user).each do |tag|
+      = tag.name
+      = achievement_time_format(tag.goal.to_seconds) if tag.goal
+      %br
   - @achievements.each do |name, time|
     = name
+    = achievement_time_format(Tag.find_by(name: name).goal.to_seconds) if tag.goal
     = achievement_time_format(time)
     - if @goals[name]
       - if @goals[name] <= time
@@ -33,8 +41,8 @@
     - else
       このタグには、毎月の目標時間が設定されていません。
     %br
-- else
-  今月分のタスクに目標時間が設定されたタグが使われると、ここに今月の目標達成度が表示されます。
+- if !@achievements && Tag.where(user: current_user).blank?
+  まだタグが登録されていません。タグを登録すると、タスクを分けるのに便利です。
 %br
 %br
 

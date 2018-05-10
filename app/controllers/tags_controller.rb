@@ -32,16 +32,21 @@ class TagsController < ApplicationController
   end
 
   def destroy
+    Task.where(tag_id: @tag).map do |task|
+      task.tag_id = nil
+      task.save!(validate: false)
+    end
     @tag.destroy
     redirect_to tags_path
   end
 
   private
-    def set_tag
-      @tag = current_user.tags.find_by(id: params[:id])
-    end
 
-    def tag_params
-      params.require(:tag).permit(:name)
-    end
+  def set_tag
+    @tag = current_user.tags.find_by(id: params[:id])
+  end
+
+  def tag_params
+    params.require(:tag).permit(:name)
+  end
 end
