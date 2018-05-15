@@ -2,6 +2,8 @@ class TasksController < ApplicationController
   before_action :verify_user
 
   def create
+    params[:task]['starts_at'] = Time.zone.parse(params[:task]['starts_at'].to_s).change(year: params[:task]['year'].to_i, month: params[:task]['month'].to_i, day: params[:task]['day'].to_i)
+    params[:task]['ends_at'] = Time.zone.parse(params[:task]['ends_at'].to_s).change(year: params[:task]['year'].to_i, month: params[:task]['month'].to_i, day: params[:task]['day'].to_i)
     task = current_user.tasks.build(task_params)
 
     if task.save
