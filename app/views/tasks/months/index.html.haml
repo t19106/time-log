@@ -36,17 +36,18 @@
             %span.tag-goal #{achievement_time_format(tag.goal.to_seconds) if tag.goal}
 
       - @achievements.each do |name, time|
-        %p.tag-information
+        %div.tag-information
           %span.tag-name #{name}
           - if Tag.find_by(name: name).goal
             %span.tag-goal #{achievement_time_format(time)} / #{achievement_time_format(Tag.find_by(name: name).goal.to_seconds)}
-          %p.tag-suggest
-            - if @goals[name]
+          - if @goals[name]
+            %p.tag-suggest
               - if @goals[name] <= time
                 今月はゴール目標を達成しています。
               - else
                 残り#{achievement_time_format(@goals[name] - time)}で、今月の目標を達成します。
-            - else
+          - else
+            %p.tag-suggest
               このタグには、毎月の目標時間が設定されていません。
 
       - if !@achievements && Tag.where(user: current_user).blank?
@@ -62,8 +63,10 @@
           - @tasks[date].each do |task|
             %section.day-task.cf
               .task-left
-                %span.task-name #{task.memo}
-                %span.task-tag 勉強
+                %p.task-name
+                  = task.memo
+                  - if task.tag_id
+                    %span.task-tag #{Tag.find_by(id: task.tag_id).name}
               .task-right
                 %span.task-total #{time_format_from_task(task)}
                 %span.task-around #{show_time_range(task)}
@@ -89,6 +92,7 @@
         #{params[:year]}#{t :year}
         %span.nav-month #{params[:month].to_i + 1}#{t :month}
 
-
-  = link_to 'タグを作る', tags_path
-  = link_to 'ログアウトする', logout_path
+  %nav.cf
+    = link_to 'タグを作る', tags_path, class: 'daily-nav'
+  %nav.cf
+    = link_to 'ログアウトする', logout_path, class: 'daily-nav'

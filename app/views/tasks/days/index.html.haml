@@ -3,8 +3,6 @@
     = a.first
     %br
 
-
-
 %main.daily-content
   %section.content-day
     %h1.daily-header
@@ -16,17 +14,13 @@
       = link_to task_path(id: task.id, date: @date), method: :delete, class: 'day-task' do
         %section.cf
           .task-left
-            %span.task-name #{task.memo}
-            - if task.tag_id
-              %span.task-tag #{Tag.find(task.tag_id).name}
+            %p.task-name
+              = task.memo
+              - if task.tag_id
+                %span.task-tag #{Tag.find(task.tag_id).name}
           .task-right
             %span.task-total #{time_format_from_task(task)}
             %span.task-around #{show_time_range(task)}
-
-
-
-
-
 
 = form_for @task, url: tasks_path do |f|
   = f.hidden_field :year, value: params[:year]
@@ -51,6 +45,7 @@
 
 %nav.cf
   = link_to '当月の一覧へ戻る', tasks_months_path(year: @date.year, month: @date.month), class: 'daily-nav'
+
 
 
 %link{rel: "stylesheet", href: "//code.jquery.com/ui/1.11.3/themes/smoothness/jquery-ui.css"}

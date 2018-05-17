@@ -1,3 +1,4 @@
-%body
-  %header.header
-    %h1.header-title time-log
+%header.header
+  = link_to tasks_months_path(year: Time.zone.now.year, month: Time.zone.now.month) do
+    %h1.header-title
+      time-log

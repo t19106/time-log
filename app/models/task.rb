@@ -4,6 +4,8 @@ class Task < ApplicationRecord
 
   validates :starts_at, presence: true
   validates :ends_at, presence: true
+  validates :memo, length: { maximum: 30 }
+
   validate :ended_after_started
   validate :started_and_ended_are_different
   validate :less_than_a_day
