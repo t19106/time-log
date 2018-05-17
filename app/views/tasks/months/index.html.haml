@@ -1,61 +1,94 @@
 - if flash[:alert]
   = flash[:alert]
   %br
-= l @date, format: :month
-%br
-- (@date.beginning_of_month.day..@date.end_of_month.day).each do |date|
-  - date_in_time = Time.zone.local(params[:year], params[:month], date)
-  = link_to (l date_in_time, format: :day), tasks_days_path(year: params[:year], month: params[:month], day: date)
-  %br
-  - if @tasks[date]
-    合計時間:
-    = total_time_from_tasks(@tasks[date], date_in_time)
-    %br
-    - @tasks[date].each do |task|
-      - unless task.blank?
-        = task.memo
-        = time_format_from_task(task)
-        = show_time_range(task)
-        %br
-  %br
 
-登録タグ：
-%br
-- if @achievements
-  - if @achievements.blank?
-    - Tag.where(user: current_user).each do |tag|
-      = tag.name
-      = achievement_time_format(tag.goal.to_seconds) if tag.goal
-      %br
-  - @achievements.each do |name, time|
-    = name
-    = achievement_time_format(Tag.find_by(name: name).goal.to_seconds) if tag.goal
-    = achievement_time_format(time)
-    - if @goals[name]
-      - if @goals[name] <= time
-        今月はゴール目標を達成しています。
-      - else
-        残り
-        = achievement_time_format(@goals[name] - time)
-        で、今月の目標を達成します。
+%main.monthly-content
+  %nav.monthly-nav.cf
+    - if params[:month].to_i - 1 <= 0
+      = link_to tasks_months_path(year: params[:year].to_i - 1, month: 12), class: 'nav-prev' do
+        #{params[:year].to_i - 1}#{t :year}
+        %span.nav-month #{t :year}12#{t :month}"
     - else
-      このタグには、毎月の目標時間が設定されていません。
-    %br
-- if !@achievements && Tag.where(user: current_user).blank?
-  まだタグが登録されていません。タグを登録すると、タスクを分けるのに便利です。
-%br
-%br
+      = link_to tasks_months_path(year: params[:year], month: params[:month].to_i - 1), class: 'nav-prev' do
+        #{params[:year]}#{t :year}
+        %span.nav-month #{params[:month].to_i - 1}#{t :month}
+    = link_to "今月へ戻る", tasks_months_path(year: Time.zone.now.year, month: Time.zone.now.month), class: 'nav-now'
+    - if params[:month].to_i + 1 >= 13
+      = link_to tasks_months_path(year: params[:year].to_i + 1, month: 1), class: 'nav-next' do
+        #{params[:year].to_i + 1}#{t :year}
+        %span.nav-month 1#{t :month}
+    - else
+      = link_to tasks_months_path(year: params[:year], month: params[:month].to_i + 1), class: 'nav-next' do
+        #{params[:year]}#{t :year}
+        %span.nav-month #{params[:month].to_i + 1}#{t :month}
 
-- if params[:month].to_i - 1 <= 0
-  = link_to "<#{params[:year].to_i - 1}#{t :year}12#{t :month}", tasks_months_path(year: params[:year].to_i - 1, month: 12)
-- else
-  = link_to "<#{params[:year]}#{t :year}#{params[:month].to_i - 1}#{t :month}", tasks_months_path(year: params[:year], month: params[:month].to_i - 1)
-= link_to "今月へ戻る", tasks_months_path(year: Time.zone.now.year, month: Time.zone.now.month)
-- if params[:month].to_i + 1 >= 13
-  = link_to "#{params[:year].to_i + 1}#{t :year}1#{t :month}>", tasks_months_path(year: params[:year].to_i + 1, month: 1)
-- else
-  = link_to "#{params[:year]}#{t :year}#{params[:month].to_i + 1}#{t :month}>", tasks_months_path(year: params[:year], month: params[:month].to_i + 1)
-%br
-= link_to 'タグを作る', tags_path
-%br
-= link_to 'ログアウトする', logout_path
+  %section.content-monthly.cf
+    %h1.monthly-header-month #{l @date, format: :month}
+    %h1.monthly-header-year #{l @date, format: :year}
+
+  %section.content-tag
+    %h1.tag-title 登録タグ
+    - if @achievements
+      - if @achievements.blank?
+        - Tag.where(user: current_user).each do |tag|
+          %p.tag-information
+            %span.tag-name #{tag.name}
+            %span.tag-goal #{achievement_time_format(tag.goal.to_seconds) if tag.goal}
+
+      - @achievements.each do |name, time|
+        %p.tag-information
+          %span.tag-name #{name}
+          - if Tag.find_by(name: name).goal
+            %span.tag-goal #{achievement_time_format(time)} / #{achievement_time_format(Tag.find_by(name: name).goal.to_seconds)}
+          %p.tag-suggest
+            - if @goals[name]
+              - if @goals[name] <= time
+                今月はゴール目標を達成しています。
+              - else
+                残り#{achievement_time_format(@goals[name] - time)}で、今月の目標を達成します。
+            - else
+              このタグには、毎月の目標時間が設定されていません。
+
+      - if !@achievements && Tag.where(user: current_user).blank?
+        %p.tag-none まだタグが登録されていません。タグを登録すると、タスクを分けるのに便利です。
+
+  - (@date.beginning_of_month.day..@date.end_of_month.day).each do |date|
+    - date_in_time = Time.zone.local(params[:year], params[:month], date)
+    = link_to tasks_days_path(year: params[:year], month: params[:month], day: date) do
+      %section.content-day
+        %h1.day-date #{l date_in_time, format: :day}
+        - if @tasks[date]
+          %p.day-total-time 合計時間: #{total_time_from_tasks(@tasks[date], date_in_time)}
+          - @tasks[date].each do |task|
+            %section.day-task.cf
+              .task-left
+                %span.task-name #{task.memo}
+                %span.task-tag 勉強
+              .task-right
+                %span.task-total #{time_format_from_task(task)}
+                %span.task-around #{show_time_range(task)}
+        - else
+          %span.task-not-found タスクはまだ登録されていません。
+
+  %nav.monthly-nav.cf
+    - if params[:month].to_i - 1 <= 0
+      = link_to tasks_months_path(year: params[:year].to_i - 1, month: 12), class: 'nav-prev' do
+        #{params[:year].to_i - 1}#{t :year}
+        %span.nav-month #{t :year}12#{t :month}"
+    - else
+      = link_to tasks_months_path(year: params[:year], month: params[:month].to_i - 1), class: 'nav-prev' do
+        #{params[:year]}#{t :year}
+        %span.nav-month #{params[:month].to_i - 1}#{t :month}
+    = link_to "今月へ戻る", tasks_months_path(year: Time.zone.now.year, month: Time.zone.now.month), class: 'nav-now'
+    - if params[:month].to_i + 1 >= 13
+      = link_to tasks_months_path(year: params[:year].to_i + 1, month: 1), class: 'nav-next' do
+        #{params[:year].to_i + 1}#{t :year}
+        %span.nav-month 1#{t :month}
+    - else
+      = link_to tasks_months_path(year: params[:year], month: params[:month].to_i + 1), class: 'nav-next' do
+        #{params[:year]}#{t :year}
+        %span.nav-month #{params[:month].to_i + 1}#{t :month}
+
+
+  = link_to 'タグを作る', tags_path
+  = link_to 'ログアウトする', logout_path

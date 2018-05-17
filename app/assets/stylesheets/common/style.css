@@ -89,7 +89,7 @@ a img {
 
    /* タグ */
    .content-tag {
-     padding: 10px 12px;
+     padding: 10px 12px 6px;
      background: #eee;
    }
    /* サービスロゴ */
@@ -262,6 +262,15 @@ a img {
    }
    .tag-header {
      font-size: 15px;
+   }
+   .tag-name {
+     font-weight: 900;
+   }
+   .tag-suggest {
+     font-size: 13px;
+     line-height: 13px;
+     margin: 0;
+     padding: 4px 0;
    }
    .input-tag select {
      font-size: 15px;
