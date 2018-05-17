@@ -1,0 +1,292 @@
+/*
+ * This is a manifest file that'll be compiled into application.css, which will include all the files
+ * listed below.
+ *
+ * Any CSS and SCSS file within this directory, lib/assets/stylesheets, or any plugin's
+ * vendor/assets/stylesheets directory can be referenced here using a relative path.
+ *
+ * You're free to add application-wide styles to this file and they'll appear at the bottom of the
+ * compiled file so the styles you add here take precedence over styles defined in any other CSS/SCSS
+ * files in this directory. Styles in this file should be added after the last require_* statement.
+ * It is generally better to create a new file per style scope.
+ *
+ *= require_tree .
+ *= require_self
+ */
+
+ html, body, h1 {
+   margin: 0;
+   padding: 0;
+ }
+
+ /* For modern browsers */
+ .cf:before,
+ .cf:after {
+     content:"";
+     display:table;
+ }
+ .cf:after {
+     clear:both;
+ }
+ /* For IE 6/7 (trigger hasLayout) */
+ .cf {
+     zoom:1;
+ }
+
+ a:link {
+  color: #333;
+  text-decoration: none;
+}
+a:visited {
+  color: #333;
+  text-decoration: none;
+}
+a:hover {
+  color: #900;
+  text-decoration: none;
+}
+a img {
+  border-width: 0px;
+  border-style: none;
+  border-color: #fff;
+  background: transparent;
+}
+
+ @media screen and (max-width: 800px) {
+   .header {
+     padding: 6px 10px;
+     background: #ccc;
+     text-align: center;
+     margin: 0;
+   }
+   /* サービスロゴ */
+   .header-title {
+     font-size: 20px;
+     margin: 0;
+   }
+
+   /* 月表示 */
+   .content-monthly {
+     padding: 24px 16px;
+     background: #999;
+   }
+   .monthly-header-month {
+     font-size: 24px;
+   }
+   .monthly-header-year {
+     font-size: 16px;
+   }
+
+   /* デイリータスク表示 */
+   .content-day {
+     padding: 10px 12px 4px;
+     background: #ddd;
+     border-bottom: 1px solid #999;
+   }
+   .content-day .day-total-time {
+     margin: 2px 0 8px;
+   }
+
+   /* タグ */
+   .content-tag {
+     padding: 10px 12px;
+     background: #eee;
+   }
+   /* サービスロゴ */
+   .tag-title {
+     font-size: 15px;
+   }
+   .tag-none {
+     font-size: 14px;
+     line-height: 15px;
+     margin: 4px 0;
+   }
+   .tag-information {
+     font-size: 14px;
+     line-height: 15px;
+     margin: 4px 0;
+   }
+
+   /* タスク */
+   .day-box {
+     width: 100%;
+   }
+   .day-box .day-total-time {
+     font-size: 15px;
+     margin: 0;
+   }
+   .day-date {
+     font-size: 16px;
+   }
+   .day-task {
+     display: block;
+     margin: 0;
+     border-bottom: 1px solid #aaa;
+     padding: 10px 0;
+   }
+   .day-task:last-of-type {
+     border: 0;
+   }
+
+   .task-left {
+     max-width: 60%;
+     float: left;
+   }
+   .task-right {
+     padding-left: 4px;
+     width: 110px;
+     float: right;
+   }
+   .task-name {
+     font-size: 14px;
+     line-height: 12px;
+   }
+   .task-tag {
+     padding: 2px 3px;
+     width: auto;
+     line-height: 20px;
+     border-radius: 3px;
+     border: 1px solid #111;
+     font-size: 12px;
+   }
+   .task-name {
+     font-size: 14px;
+   }
+   .task-delete {
+     border: 1px solid #222;
+     border-radius: 3px;
+     background: #fff;
+     color: #f00;
+     padding: 1px;
+   }
+   .task-total {
+     font-size: 15px;
+     display: block;
+   }
+   .task-around {
+     font-size: 13px;
+     display: block;
+   }
+   .task-not-found {
+     font-size: 14px;
+   }
+
+   /* 月別ナビゲーター */
+   .monthly-nav {
+     height: 80px;
+     font-size: 12px;
+   }
+   .monthly-nav .nav-prev {
+     padding-top: 16px;
+     text-align: center;
+     display: inline-block;
+     float: left;
+     width: 33.3333%;
+   }
+   .monthly-nav .nav-now {
+     padding-top: 30px;
+     text-align: center;
+     display: inline-block;
+     float: left;
+     width: 33.3333%;
+     font-size: 14px;
+   }
+   .monthly-nav  .nav-next {
+     padding-top: 16px;
+     text-align: center;
+     display: inline-block;
+     float: right;
+     width: 33.3333%;
+   }
+   .nav-month {
+     display: block;
+     font-size: 18px;
+   }
+
+   /* 日にち表示 */
+   .content-daily {
+     padding: 18px 16px;
+     background: #999;
+   }
+   .daily-header {
+     font-size: 18px;
+   }
+
+   /* 日別ナビゲーター */
+   .daily-nav {
+     padding: 24px 0;
+     height: 48px;
+     font-size: 16px;
+     text-align: center;
+     line-height: 48px;
+     display: block;
+   }
+
+   .form-header {
+     font-size: 16px;
+     padding: 18px 16px 4px;
+   }
+   .timepicker-header {
+     font-size: 14px;
+   }
+   .timepicker-left {
+     width: 50%;
+     float: left;
+   }
+   .timepicker-right {
+     width: 50%;
+     float: right;
+   }
+
+   .input-box {
+     padding: 8px 16px;
+   }
+   .input-timepicker input {
+     width: 100px;
+     height: 42px;
+     border: 1px solid #bbb;
+     font-size: 24px;
+     border-radius: 2px;
+   }
+   .input-memo input {
+     text-align: center;
+     border: 1px solid #bbb;
+     height: 48px;
+     font-size: 18px;
+     border-radius: 2px;
+     text-align: center;
+     padding: 0 12px;
+   }
+   .memo-header {
+     font-size: 15px;
+   }
+   .tag-header {
+     font-size: 15px;
+   }
+   .input-tag select {
+     font-size: 15px;
+     height: 32px;
+     border: 1px solid #ccc;
+     border-radius: 2px;
+     margin-bottom: 5px;
+     background-color: #fff;
+   }
+
+   .input-submit {
+     text-align: center;
+   }
+   .input-submit input {
+     text-decoration: none;
+     height: 42px;
+     border-radius: 4px;
+     color: #000;
+     font-size: 18px;
+     background-color: #fff;
+     width: 100%;
+   }
+
+   /* フッター */
+   .footer {
+
+   }
+ }
