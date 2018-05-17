@@ -2,37 +2,57 @@
   - flash[:notice].values.each do |a|
     = a.first
     %br
-= l @date, format: :date
-%br
-合計時間:
-= total_time_from_tasks(@tasks, @date) || 'まだタスクが登録されていません。'
-%br
-- @tasks.each do |task|
-  = task.memo
-  = time_format_from_task(task)
-  = show_time_range(task)
-  - if task.tag_id
-    = Tag.find(task.tag_id).name
-  = link_to '[X]', task_path(id: task.id, date: @date), method: :delete
-  %br
+
+%main.daily-content
+  %section.content-day
+    %h1.daily-header
+    #{l @date, format: :date}のタスク
+    .day-box.cf
+      %p.day-total-time 合計時間: #{total_time_from_tasks(@tasks, @date) || 'まだタスクが登録されていません。'}
+
+    - @tasks.each do |task|
+      = link_to task_path(id: task.id, date: @date), method: :delete, class: 'day-task' do
+        %section.cf
+          .task-left
+            %p.task-name
+              = task.memo
+              - if task.tag_id
+                %span.task-tag #{Tag.find(task.tag_id).name}
+          .task-right
+            %span.task-total #{time_format_from_task(task)}
+            %span.task-around #{show_time_range(task)}
+
 = form_for @task, url: tasks_path do |f|
-  = f.text_field :memo
-  = f.text_field :starts_at, class: 'task_starts_at'
-  = f.text_field :ends_at, class: 'task_ends_at'
   = f.hidden_field :year, value: params[:year]
   = f.hidden_field :month, value: params[:month]
   = f.hidden_field :day, value: params[:day]
-  = f.select :tag_id, current_user.tags.all.collect { |t| [t.name, t.id] }, include_blank: true
-  = f.submit
-%br
-= link_to '一覧へ戻る', tasks_months_path(year: @date.year, month: @date.month)
+  %h1.form-header この日のタスクを入力しよう！
+  %section.input-box.input-memo
+    %h1.memo-header 何をしていましたか？
+    = f.text_field :memo
+  %section.input-box.input-tag
+    %h1.tag-header タグ付け
+    = f.select :tag_id, current_user.tags.all.collect { |t| [t.name, t.id] }, include_blank: true
+  %section.input-box.input-timepicker.cf
+    .timepicker-left
+      %h1.timepicker-header 開始時間
+      = f.text_field :starts_at, class: 'task_starts_at'
+    .timepicker-right
+      %h1.timepicker-header 終了時間
+      = f.text_field :ends_at, class: 'task_ends_at'
+  %section.input-box.input-submit
+    = f.submit '登録する'
+
+%nav.cf
+  = link_to '当月の一覧へ戻る', tasks_months_path(year: @date.year, month: @date.month), class: 'daily-nav'
+
+
 
 %link{rel: "stylesheet", href: "//code.jquery.com/ui/1.11.3/themes/smoothness/jquery-ui.css"}
 %link{rel: "stylesheet", href: "//jonthornton.github.io/jquery-timepicker/jquery.timepicker.css"}
 %script{src: "//code.jquery.com/jquery-1.10.2.js"}
 %script{src: "//code.jquery.com/ui/1.11.3/jquery-ui.js"}
 %script{src: "//jonthornton.github.io/jquery-timepicker/jquery.timepicker.js"}
-= set_time_select_to_now(Time.zone.now)
 :javascript
   $(document).ready(function(){
     $('.task_starts_at').timepicker({
