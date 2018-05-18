@@ -8,7 +8,6 @@ end
 gem 'rails', '~> 5.1.3'
 gem 'pg'
 gem 'bcrypt'
-gem 'sqlite3'
 gem 'puma', '~> 3.7'
 gem 'sass-rails', '~> 5.0'
 gem 'haml-rails'
