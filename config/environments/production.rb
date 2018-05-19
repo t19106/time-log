@@ -102,4 +102,7 @@ Rails.application.configure do
     :domain         => 'heroku.com',
     :enable_starttls_auto => true
   }
+
+  config.autoload_paths << Rails.root.join("lib")
+  config.eager_load_paths << Rails.root.join("lib")
 end
