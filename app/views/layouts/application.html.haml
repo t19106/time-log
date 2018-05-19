@@ -7,7 +7,10 @@
     = csrf_meta_tags
     = stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload'
     = stylesheet_link_tag    'common/style', media: 'all', 'data-turbolinks-track': 'reload'
+    = stylesheet_link_tag    '//jonthornton.github.io/jquery-timepicker/jquery.timepicker.css'
     = javascript_include_tag 'application', 'data-turbolinks-track': 'reload'
+    = javascript_include_tag '//code.jquery.com/jquery-1.10.2.js'
+    = javascript_include_tag '//jonthornton.github.io/jquery-timepicker/jquery.timepicker.js'
   %body
     = render 'layouts/header'
     = yield

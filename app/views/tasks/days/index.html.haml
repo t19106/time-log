@@ -46,13 +46,6 @@
 %nav.cf
   = link_to '当月の一覧へ戻る', tasks_months_path(year: @date.year, month: @date.month), class: 'daily-nav'
 
-
-
-%link{rel: "stylesheet", href: "//code.jquery.com/ui/1.11.3/themes/smoothness/jquery-ui.css"}
-%link{rel: "stylesheet", href: "//jonthornton.github.io/jquery-timepicker/jquery.timepicker.css"}
-%script{src: "//code.jquery.com/jquery-1.10.2.js"}
-%script{src: "//code.jquery.com/ui/1.11.3/jquery-ui.js"}
-%script{src: "//jonthornton.github.io/jquery-timepicker/jquery.timepicker.js"}
 :javascript
   $(document).ready(function(){
     $('.task_starts_at').timepicker({
