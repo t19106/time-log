@@ -2,7 +2,10 @@
 %p Find me in app/views/users/new.html.haml
 
 = form_for @user do |f|
+  メールアドレス：
   = f.text_field :mail
+  パスワード：
   = f.password_field :password
+  パスワード（確認）：
   = f.password_field :password_confirmation
   = f.submit
